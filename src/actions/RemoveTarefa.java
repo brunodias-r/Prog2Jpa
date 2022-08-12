@@ -1,31 +1,28 @@
 package actions;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 import model.Tarefa;
 
-public class BuscaTarefas {
+public class RemoveTarefa {
 
 	public static void main(String[] args) {
+		Tarefa tarefa1 = new Tarefa();
+		
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("tarefas");
 		EntityManager manager = factory.createEntityManager();
 		
-		String sql = "select t from tarefas as t";
+		tarefa1.setId(3L);
+		tarefa1 = manager.find(Tarefa.class, 3L);
 		
-		Query query = manager.createQuery(sql);
+		manager.getTransaction().begin();
+		manager.remove(tarefa1);
+		manager.getTransaction().commit();
 		
-		List<Tarefa> lista = query.getResultList();
+		System.out.println("Tarefa excluída!");
 		
-		for(Tarefa tarefa : lista) {
-			System.out.println(tarefa.getDescricao());
-		}		
-		
-
 		manager.close();
 		factory.close();
 	}
